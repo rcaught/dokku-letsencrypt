@@ -194,7 +194,8 @@ letsencrypt_configure_and_get_dir() {
   fi
 
   # construct domain arguments
-  DOMAINS=$(dokku urls "$APP" | sed "s,\\s,\n,g" | sed -re "s,https?://,," | sed -re "s,\\*\\.,," | uniq | xargs)
+  DOMAINS=$(dokku urls "$APP" | sed "s,\\s,\n,g" | sed -re "s,https?://,," | sed -re "s,\\*\\.,," \
+    | sed -re "s,:[0-9]+,," | sed -re "s,\(.*?\),," | sort -u | xargs)
   DOMAIN_ARGS=''
   for DOMAIN in $DOMAINS; do
     dokku_log_verbose " - Domain '$DOMAIN'" >&2
